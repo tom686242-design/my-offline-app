@@ -1,32 +1,31 @@
-const CACHE_NAME = 'vault-v2';
-const STATIC_ASSETS = [
-  './',
-  './index.html',
-  './app.js',
-  './manifest.json'
-];
+const CACHE_NAME = 'vault-gaming-v1'; // Update this (v1, v2, v3) when you change code
+const ASSETS = ['./', './index.html', './app.js', './manifest.json'];
 
-// On install, save the core app structure
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
+self.addEventListener('install', (e) => {
+  // skipWaiting forces this new service worker to become active immediately
+  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
+});
+
+self.addEventListener('activate', (e) => {
+  // clients.claim ensures the new worker takes control of the page immediately
+  e.waitUntil(self.clients.claim());
+  e.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+    ))
   );
 });
 
-// The "Interceptor" - This is what makes it work offline
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      // If we have it in cache, return it. Otherwise, fetch from web.
-      return cachedResponse || fetch(event.request).then(response => {
-        // Automatically save the new page we just fetched into the cache
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    caches.match(e.request).then(res => {
+      return res || fetch(e.request).then(networkRes => {
         return caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, response.clone());
-          return response;
+          cache.put(e.request, networkRes.clone());
+          return networkRes;
         });
       });
-    }).catch(() => {
-      // If internet is off and NOT in cache, you could return an offline.html here
     })
   );
 });
