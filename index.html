@@ -1,19 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Offline App</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Guide App</title>
     <link rel="manifest" href="manifest.json">
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f0f0f0; }
-        .card { background: white; padding: 20px; border-radius: 10px; shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        :root { --primary: #2ecc71; --dark: #2c3e50; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f7f6; color: var(--dark); }
+        header { background: var(--dark); color: white; padding: 1rem; text-align: center; position: sticky; top: 0; }
+        nav { display: flex; overflow-x: auto; background: white; border-bottom: 1px solid #ddd; }
+        nav button { padding: 15px 20px; border: none; background: none; cursor: pointer; font-weight: bold; white-space: nowrap; }
+        .section { display: none; padding: 20px; }
+        .section.active { display: block; }
+        .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid var(--primary); }
+        input { width: 80%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+        button.save-btn { background: var(--primary); color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
+
+<header><h1>Knowledge Vault</h1></header>
+
+<nav id="navbar">
+    <button onclick="showSection('home')">Home</button>
+    <button onclick="showSection('minecraft')">Minecraft</button>
+    <button onclick="showSection('survival')">Survival</button>
+    <button onclick="showSection('saved')">Saved Tools</button>
+</nav>
+
+<div id="home" class="section active">
+    <h2>Save for Offline</h2>
+    <p>Paste a URL below, click save, then click the link to visit it once. It will then be saved for offline use!</p>
+    <input type="text" id="urlInput" placeholder="https://example.com/guide">
+    <button class="save-btn" onclick="saveUrl()">Save</button>
+    <div id="urlList"></div>
+</div>
+
+<div id="minecraft" class="section">
+    <h2>Minecraft Guides</h2>
     <div class="card">
-        <h1>My Offline App</h1>
-        <p>If you see this while your Wi-Fi is off, it's working!</p>
+        <h3>Villager Breeder</h3>
+        <p>1. Place two villagers in a 9x9 farm area.<br>2. Add 3 beds per villager.<br>3. Toss them 12 carrots each.</p>
     </div>
-    <script src="app.js"></script>
+    <div class="card">
+        <h3>Mob Farm</h3>
+        <p>Build a 20-block high tower with a 2x2 drop chute to bring mobs to 1 HP.</p>
+    </div>
+</div>
+
+<div id="survival" class="section">
+    <h2>Survival Skills</h2>
+    <div class="card">
+        <h3>How to start a fire</h3>
+        <p>Use dry tinder and a ferro rod. Shelter the flame from wind immediately.</p>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function saveUrl() {
+        const url = document.getElementById('urlInput').value;
+        if(url) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.className = 'card';
+            link.style.display = 'block';
+            link.innerText = "Visit & Cache: " + url;
+            link.target = "_blank";
+            document.getElementById('urlList').appendChild(link);
+            document.getElementById('urlInput').value = '';
+        }
+    }
+</script>
 </body>
 </html>
