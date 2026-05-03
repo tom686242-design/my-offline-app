@@ -3,57 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Guide App</title>
+    <title>Vault Pro - Gamer Edition</title>
     <link rel="manifest" href="manifest.json">
     <style>
-        :root { --primary: #2ecc71; --dark: #2c3e50; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f7f6; color: var(--dark); }
-        header { background: var(--dark); color: white; padding: 1rem; text-align: center; position: sticky; top: 0; }
-        nav { display: flex; overflow-x: auto; background: white; border-bottom: 1px solid #ddd; }
-        nav button { padding: 15px 20px; border: none; background: none; cursor: pointer; font-weight: bold; white-space: nowrap; }
-        .section { display: none; padding: 20px; }
+        :root { --accent: #00ff88; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+        body { font-family: 'Inter', system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); line-height: 1.6; }
+        
+        /* Glassmorphism Header */
+        header { background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px); padding: 1rem; text-align: center; position: sticky; top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 100; }
+        
+        /* Modern Sidebar/Nav */
+        nav { display: flex; gap: 10px; padding: 10px; overflow-x: auto; background: #000; }
+        nav button { background: var(--card); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 20px; cursor: pointer; white-space: nowrap; transition: 0.3s; }
+        nav button.active { background: var(--accent); color: #000; font-weight: bold; }
+
+        .container { padding: 20px; max-width: 800px; margin: auto; }
+        .section { display: none; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
-        .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid var(--primary); }
-        input { width: 80%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
-        button.save-btn { background: var(--primary); color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+
+        /* Card Styles */
+        .card { background: var(--card); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .badge { background: var(--accent); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+        
+        /* Gaming Subsections */
+        .sub-nav { display: flex; gap: 10px; margin-bottom: 20px; }
+        .sub-nav button { font-size: 0.8rem; background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+
+        /* Save URL Tool */
+        .save-box { display: flex; gap: 10px; margin-top: 10px; }
+        input { flex: 1; padding: 12px; border-radius: 8px; border: none; background: #334155; color: white; }
+        .btn-primary { background: var(--accent); color: #000; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<header><h1>Knowledge Vault</h1></header>
+<header><h1>VAULT <span style="color:var(--accent)">PRO</span></h1></header>
 
-<nav id="navbar">
-    <button onclick="showSection('home')">Home</button>
-    <button onclick="showSection('minecraft')">Minecraft</button>
+<nav id="mainNav">
+    <button onclick="showSection('home')" class="active">Home</button>
+    <button onclick="showSection('gaming')">Gaming</button>
     <button onclick="showSection('survival')">Survival</button>
-    <button onclick="showSection('saved')">Saved Tools</button>
 </nav>
 
-<div id="home" class="section active">
-    <h2>Save for Offline</h2>
-    <p>Paste a URL below, click save, then click the link to visit it once. It will then be saved for offline use!</p>
-    <input type="text" id="urlInput" placeholder="https://example.com/guide">
-    <button class="save-btn" onclick="saveUrl()">Save</button>
-    <div id="urlList"></div>
-</div>
-
-<div id="minecraft" class="section">
-    <h2>Minecraft Guides</h2>
-    <div class="card">
-        <h3>Villager Breeder</h3>
-        <p>1. Place two villagers in a 9x9 farm area.<br>2. Add 3 beds per villager.<br>3. Toss them 12 carrots each.</p>
+<div class="container">
+    <div id="home" class="section active">
+        <div class="card">
+            <h2>Offline Web Saver</h2>
+            <p>Enter a URL to cache it for offline use.</p>
+            <div class="save-box">
+                <input type="text" id="urlInput" placeholder="https://minecraft.wiki/...">
+                <button class="btn-primary" onclick="saveUrl()">Save</button>
+            </div>
+            <div id="urlList" style="margin-top: 20px;"></div>
+        </div>
     </div>
-    <div class="card">
-        <h3>Mob Farm</h3>
-        <p>Build a 20-block high tower with a 2x2 drop chute to bring mobs to 1 HP.</p>
-    </div>
-</div>
 
-<div id="survival" class="section">
-    <h2>Survival Skills</h2>
-    <div class="card">
-        <h3>How to start a fire</h3>
-        <p>Use dry tinder and a ferro rod. Shelter the flame from wind immediately.</p>
+    <div id="gaming" class="section">
+        <div class="sub-nav">
+            <button onclick="showSub('mc')">Minecraft</button>
+            <button onclick="showSub('other')">General</button>
+        </div>
+
+        <div id="mc" class="sub-section">
+            <div class="card">
+                <span class="badge">V26.1 COMPATIBLE</span>
+                <h3>Villager Breeder (Easy)</h3>
+                <ol>
+                    <li>Dig a 9x9 hole, 2 blocks deep.</li>
+                    <li>Place 4 beds in the corners.</li>
+                    <li>Add 2 Villagers and 1 Composter.</li>
+                    <li>Supply 12 Carrots/Bread per villager.</li>
+                </ol>
+            </div>
+            <div class="card">
+                <span class="badge">XP FARM</span>
+                <h3>Classic Mob Tower</h3>
+                <ul>
+                    <li>Build a 22-block high tube.</li>
+                    <li>Create 8-block long water channels at the top.</li>
+                    <li>Mobs fall to 1-HP for easy manual kills.</li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -61,19 +94,23 @@
 <script>
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('#mainNav button').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    function showSub(id) {
+        document.querySelectorAll('.sub-section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
     }
 
     function saveUrl() {
         const url = document.getElementById('urlInput').value;
         if(url) {
-            const link = document.createElement('a');
-            link.href = url;
-            link.className = 'card';
-            link.style.display = 'block';
-            link.innerText = "Visit & Cache: " + url;
-            link.target = "_blank";
-            document.getElementById('urlList').appendChild(link);
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `<a href="${url}" target="_blank" style="color:var(--accent); text-decoration:none;">🔗 Open & Cache: ${url}</a>`;
+            document.getElementById('urlList').appendChild(div);
             document.getElementById('urlInput').value = '';
         }
     }
